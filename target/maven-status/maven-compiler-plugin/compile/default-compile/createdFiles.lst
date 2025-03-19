@@ -1,0 +1,5 @@
+com\example\testing\CodeAnalyzer.class
+com\example\testing\JiraService.class
+com\example\testing\MainApplication.class
+com\example\testing\ComparisonService.class
+com\example\testing\TestCoverageAnalyzer.class
