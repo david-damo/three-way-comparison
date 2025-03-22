@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 
 public class JiraService {
     private static final String JIRA_URL = "https://davidka-home.atlassian.net/rest/api/2/search";
-    private static final String JIRA_USERNAME = "username";
+    private static final String JIRA_USERNAME = "abc@gmail.com";
     private static final String JIRA_API_TOKEN = "token";
 
     public List<String> getBusinessScenarios(String projectKey) throws Exception {

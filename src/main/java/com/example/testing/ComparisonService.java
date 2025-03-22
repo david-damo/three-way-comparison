@@ -18,7 +18,7 @@ public class ComparisonService {
     public void evaluateTestCoverage(String projectKey) throws Exception {
         List<String> businessScenarios = jiraService.getBusinessScenarios(projectKey);
         List<String> developedScenarios = codeAnalyzer.extractBusinessScenarios();
-        List<String> testCases = testAnalyzer.getAutomatedTests();
+        List<String> testCases = testAnalyzer.extractAutomationScenarios();
 
         System.out.println("===== Business Scenarios (Jira) =====");
         businessScenarios.forEach(System.out::println);

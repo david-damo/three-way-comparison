@@ -17,13 +17,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class CodeAnalyzer {
-	//File directory = new File("C:/Users/Sanjeev jha/Tutorial-2024/TestInSight-Workspace/TempClone".replace(" ", "%20"));
-    private static final String REMOTE_REPO_URL = "https://github.com/david-damo/biryani-order-app.git";
+    private static final String REMOTE_REPO_URL = "https://github.com/abc/biryani-order-app.git";
     private static final String LOCAL_REPO_PATH = "C:/Users/public/ThreeWayTest/TempClone";
-    //private static final String LOCAL_REPO_PATH = directory.;
+  
 
-    private static final String GITHUB_USERNAME = "GITHUB_USERNAME";
-    private static final String GITHUB_TOKEN = "GitHub Token";  
+    private static final String GITHUB_USERNAME = "abc@rediffmail.com";
+    private static final String GITHUB_TOKEN = "token";  
     public void cloneOrInitializeRepository() {
         File localPath = new File(LOCAL_REPO_PATH);
 
@@ -51,8 +50,9 @@ public class CodeAnalyzer {
             System.err.println("Error cloning repository: " + e.getMessage());
             e.printStackTrace();
             System.out.println("Cloning failed. Attempting to initialize a new Git repository...");
-            initializeNewGitRepository(localPath);
+            
         }
+        initializeNewGitRepository(localPath);
     }
 
     private void initializeNewGitRepository(File repoDir) {
@@ -64,12 +64,14 @@ public class CodeAnalyzer {
             System.err.println("Failed to initialize new Git repository: " + e.getMessage());
             e.printStackTrace();
         }
+        //cloneOrInitializeRepository();
     }
 
     public List<String> extractBusinessScenarios() {
         List<String> scenarios = new ArrayList<>();
         File repoDir = new File(LOCAL_REPO_PATH);
-
+        //initializeNewGitRepository(repoDir);
+        cloneOrInitializeRepository();
         // Ensure the repository exists before analyzing
         if (!repoDir.exists() || !new File(repoDir, ".git").exists()) {
             System.err.println("Error: Repository does not exist at " + LOCAL_REPO_PATH);

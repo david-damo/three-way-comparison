@@ -1,65 +1,100 @@
 package com.example.testing;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 public class TestCoverageAnalyzer {
-    //private static final String TEST_DIRECTORY = "https://github.com/david-damo/biryani-bdd-test/tree/master/src/test/resources/features";
+	private static final String REMOTE_REPO_URL = "https://github.com/abc/biryani-bdd-test.git";
+    private static final String LOCAL_REPO_PATH = "C:/Users/public/ThreeWayTest/Automation";
 
-    
-    private static final String TEST_DIRECTORY = "https://github.com/david-damo/biryani-order-app";
-    private static final String LOCAL_REPO_PATH = "C:/Users/Sanjeev jha/Tutorial-2024/TestInSight-Workspace/biryani-bdd-tests";
-    
-    public void cloneRepository() throws GitAPIException {
+    private static final String GITHUB_USERNAME = "abc@rediffmail.com";
+    private static final String GITHUB_TOKEN = "token";  
+    public void cloneOrInitializeRepository() {
         File localPath = new File(LOCAL_REPO_PATH);
-
-        // If repo already exists, delete it (optional)
-        if (localPath.exists()) {
+        System.out.println("Cloning repository for automation");
+        // Delete old repository if it's invalid (missing .git folder)
+        if (localPath.exists() && !new File(localPath, ".git").exists()) {
+            System.out.println("Deleting incomplete repository at " + LOCAL_REPO_PATH);
             deleteDirectory(localPath);
         }
 
-        // Clone the repository
-        System.out.println("Cloning repository from " + TEST_DIRECTORY + " to " + LOCAL_REPO_PATH);
-        Git.cloneRepository()
-            .setURI(TEST_DIRECTORY)
-            .setDirectory(localPath)
-            .call();
-        
-        System.out.println("Repository cloned successfully.");
-    }
-    
-    public List<String> getAutomatedTests() throws Exception {
-        List<String> testCases = new ArrayList<>();
-        File testDir = new File(LOCAL_REPO_PATH);
-        if (!testDir.exists()) {
-            System.out.println("Error: Directory does not exist - " + LOCAL_REPO_PATH);
-        } else if (!testDir.isDirectory()) {
-            System.out.println("Error: Path is not a directory - " + LOCAL_REPO_PATH);
-        } else {
-            File[] files = testDir.listFiles();
-            if (files == null) {
-                System.out.println("Error: Unable to read files from directory - " + LOCAL_REPO_PATH);
+        try {
+            // Step 1: Clone from GitHub if not already cloned
+            if (!localPath.exists() || !new File(localPath, ".git").exists()) {
+                System.out.println("Cloning repository from " + REMOTE_REPO_URL + " to " + LOCAL_REPO_PATH);
+                Git.cloneRepository()
+                    .setURI(REMOTE_REPO_URL)
+                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(GITHUB_USERNAME, GITHUB_TOKEN)) // 🔹 Pass credentials
+                    .setBranch("master") 
+                    .setDirectory(localPath)
+                    .call();
+                System.out.println("Repository cloned successfully.");
             } else {
-                System.out.println("Files found: " + files.length);
+                System.out.println("Repository already exists at " + LOCAL_REPO_PATH);
             }
+        } catch (GitAPIException e) {
+            System.err.println("Error cloning repository: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("Cloning failed. Attempting to initialize a new Git repository...");
+            initializeNewGitRepository(localPath);
+        }
+    }
+
+    private void initializeNewGitRepository(File repoDir) {
+        try {
+            System.out.println("Initializing new Git repository at " + repoDir.getAbsolutePath());
+            Git.init().setDirectory(repoDir).call();
+            System.out.println("New repository initialized successfully.");
+        } catch (GitAPIException e) {
+            System.err.println("Failed to initialize new Git repository: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+	
+	//////////////////////////////////////////////////////////////////////////////////////
+    
+    public List<String> extractAutomationScenarios() {
+        List<String> automationScenarios = new ArrayList<>();
+        File repoDir = new File(LOCAL_REPO_PATH);
+        cloneOrInitializeRepository();
+        if (!repoDir.exists()) {
+            System.err.println("Error: Repository does not exist at " + LOCAL_REPO_PATH);
+            return automationScenarios;
         }
 
-        for (File file : testDir.listFiles()) {
-            if (file.getName().endsWith(".feature") || file.getName().endsWith(".java")) {
-                try (Stream<String> stream = Files.lines(file.toPath())) {
-                    stream.filter(line -> line.contains("Scenario:"))
-                          .forEach(line -> testCases.add(line.replace("Scenario:", "").trim()));
+        try (Stream<Path> paths = Files.walk(Paths.get(LOCAL_REPO_PATH))) {
+            paths.filter(Files::isRegularFile)
+                 .filter(path -> path.toString().endsWith(".feature")) // Read only feature files
+                 .forEach(path -> extractScenariosFromFeatureFile(path, automationScenarios));
+        } catch (IOException e) {
+            System.err.println("Error reading automation files: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return automationScenarios;
+    }
+
+    private void extractScenariosFromFeatureFile(Path filePath, List<String> scenarios) {
+        try {
+            List<String> lines = Files.readAllLines(filePath);
+            for (String line : lines) {
+                if (line.trim().startsWith("Scenario:")) {
+                    scenarios.add(line.replace("Scenario:", "").trim());
                 }
             }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + filePath + " - " + e.getMessage());
         }
-
-        return testCases;
     }
     
     private void deleteDirectory(File directory) {
