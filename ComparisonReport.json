@@ -1,31 +1,31 @@
 [ {
-  "Jira Acceptance Criteria" : "Add Role-Based Authentication to the Dashboard",
+  "Jira Acceptance Criteria" : "placeorder",
+  "Developed Code Business Scenario" : "✔ (method: placeorder)",
+  "Automation Code Scenario" : "✘",
+  "Missing" : "✔"
+}, {
+  "Jira Acceptance Criteria" : "analyze git repository to identify developed business scenarios",
   "Developed Code Business Scenario" : "✘",
   "Automation Code Scenario" : "✘",
   "Missing" : "✔"
 }, {
-  "Jira Acceptance Criteria" : "Fetch Jira Acceptance Points for Current Release/Sprint",
+  "Jira Acceptance Criteria" : "fetch jira acceptance points for current release/sprint",
   "Developed Code Business Scenario" : "✘",
   "Automation Code Scenario" : "✘",
   "Missing" : "✔"
 }, {
-  "Jira Acceptance Criteria" : "Integrate Jacoco for Code Coverage Analysis",
-  "Developed Code Business Scenario" : "✘",
+  "Jira Acceptance Criteria" : "biryaniorderapplication",
+  "Developed Code Business Scenario" : "✔ (business scenario: biryaniorderapplication)",
   "Automation Code Scenario" : "✘",
   "Missing" : "✔"
 }, {
-  "Jira Acceptance Criteria" : "Compare Jira Acceptance Points with Developed Scenarios",
-  "Developed Code Business Scenario" : "✘",
+  "Jira Acceptance Criteria" : "ordercontroller",
+  "Developed Code Business Scenario" : "✔ (business scenario: ordercontroller)",
   "Automation Code Scenario" : "✘",
   "Missing" : "✔"
 }, {
-  "Jira Acceptance Criteria" : "Analyze Git Repository to Identify Developed Business Scenarios",
-  "Developed Code Business Scenario" : "✘",
-  "Automation Code Scenario" : "✘",
-  "Missing" : "✔"
-}, {
-  "Jira Acceptance Criteria" : "Develop a ReactJS Dashboard for Coverage Visualization",
-  "Developed Code Business Scenario" : "✘",
+  "Jira Acceptance Criteria" : "orderservice",
+  "Developed Code Business Scenario" : "✔ (business scenario: orderservice)",
   "Automation Code Scenario" : "✘",
   "Missing" : "✔"
 } ]

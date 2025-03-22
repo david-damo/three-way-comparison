@@ -25,26 +25,51 @@ public class ComparisonServiceNew {
         List<String> jiraScenarios = jiraService.getBusinessScenarios(projectKey);
         List<String> developedScenarios = codeAnalyzer.extractBusinessScenarios();
         List<String> automationScenarios = testAnalyzer.extractAutomationScenarios();
+        
+        Set<String> jiraSet = normalizeSet(jiraScenarios);
+        Set<String> developedSet = normalizeSet(developedScenarios);
+        Set<String> automationSet = normalizeSet(automationScenarios);
 
-        Set<String> jiraSet = new HashSet<>(jiraScenarios);
-        Set<String> developedSet = new HashSet<>(developedScenarios);
-        Set<String> automationSet = new HashSet<>(automationScenarios);
+        //Set<String> jiraSet = new HashSet<>(jiraScenarios);
+        //Set<String> developedSet = new HashSet<>(developedScenarios);
+        //Set<String> automationSet = new HashSet<>(automationScenarios);
         Set<String> missingScenarios = new HashSet<>(jiraSet);
         missingScenarios.removeAll(automationSet);
 
         List<Map<String, String>> tableData = new ArrayList<>();
 
         for (String jiraScenario : jiraSet) {
+            String developedMatch = findClosestMatch(jiraScenario, developedSet);
+            String automatedMatch = findClosestMatch(jiraScenario, automationSet);
+            boolean isMissing = !automationSet.contains(jiraScenario);
+
             Map<String, String> row = new LinkedHashMap<>();
             row.put("Jira Acceptance Criteria", jiraScenario);
-            row.put("Developed Code Business Scenario", developedSet.contains(jiraScenario) ? "✔" : "✘");
-            row.put("Automation Code Scenario", automationSet.contains(jiraScenario) ? "✔" : "✘");
-            row.put("Missing", missingScenarios.contains(jiraScenario) ? "✔" : "");
+            row.put("Developed Code Business Scenario", developedMatch.isEmpty() ? "✘" : "✔ (" + developedMatch + ")");
+            row.put("Automation Code Scenario", automatedMatch.isEmpty() ? "✘" : "✔ (" + automatedMatch + ")");
+            row.put("Missing", isMissing ? "✔" : "");
             tableData.add(row);
         }
 
         writeToExcel(tableData);
         writeToJson(tableData);
+    }
+    
+    private Set<String> normalizeSet(List<String> scenarios) {
+        Set<String> normalizedSet = new HashSet<>();
+        for (String scenario : scenarios) {
+            normalizedSet.add(scenario.trim().toLowerCase());  // Normalize text
+        }
+        return normalizedSet;
+    }
+
+    private String findClosestMatch(String target, Set<String> sourceSet) {
+        for (String source : sourceSet) {
+            if (target.equalsIgnoreCase(source) || target.contains(source) || source.contains(target)) {
+                return source; // Return best match
+            }
+        }
+        return ""; // No match found
     }
 
     private void writeToExcel(List<Map<String, String>> tableData) {
