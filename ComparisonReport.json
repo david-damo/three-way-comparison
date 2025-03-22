@@ -1,0 +1,31 @@
+[ {
+  "Jira Acceptance Criteria" : "Add Role-Based Authentication to the Dashboard",
+  "Developed Code Business Scenario" : "✘",
+  "Automation Code Scenario" : "✘",
+  "Missing" : "✔"
+}, {
+  "Jira Acceptance Criteria" : "Fetch Jira Acceptance Points for Current Release/Sprint",
+  "Developed Code Business Scenario" : "✘",
+  "Automation Code Scenario" : "✘",
+  "Missing" : "✔"
+}, {
+  "Jira Acceptance Criteria" : "Integrate Jacoco for Code Coverage Analysis",
+  "Developed Code Business Scenario" : "✘",
+  "Automation Code Scenario" : "✘",
+  "Missing" : "✔"
+}, {
+  "Jira Acceptance Criteria" : "Compare Jira Acceptance Points with Developed Scenarios",
+  "Developed Code Business Scenario" : "✘",
+  "Automation Code Scenario" : "✘",
+  "Missing" : "✔"
+}, {
+  "Jira Acceptance Criteria" : "Analyze Git Repository to Identify Developed Business Scenarios",
+  "Developed Code Business Scenario" : "✘",
+  "Automation Code Scenario" : "✘",
+  "Missing" : "✔"
+}, {
+  "Jira Acceptance Criteria" : "Develop a ReactJS Dashboard for Coverage Visualization",
+  "Developed Code Business Scenario" : "✘",
+  "Automation Code Scenario" : "✘",
+  "Missing" : "✔"
+} ]
